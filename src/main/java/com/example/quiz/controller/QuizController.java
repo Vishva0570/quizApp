@@ -1,6 +1,5 @@
 package com.example.quiz.controller;
 
-
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,39 +10,47 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.quiz.model.QuestionWrapper;
 import com.example.quiz.model.Questions;
+import com.example.quiz.model.Quiz;
 import com.example.quiz.model.Response;
 import com.example.quiz.service.QuizService;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-
-
-
-
 
 @RestController
 @RequestMapping("quiz")
 public class QuizController {
 
-
     @Autowired
     QuizService quizservice;
 
-    @PostMapping(" ")
-    public ResponseEntity<String> createQuiz(@RequestParam String category,@RequestParam int numQ,@RequestParam String title) {
+    @GetMapping("/all")
+    public ResponseEntity<List<Quiz>> getAllQuizs() {
+        return quizservice.getAllQuizs();
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity<String> createQuiz(@RequestParam String category, @RequestParam int numQ,
+            @RequestParam String title) {
         return quizservice.createQuiz(category, numQ, title);
     }
-    
+
     @GetMapping("get/{id}")
     public ResponseEntity<List<QuestionWrapper>> getQuestions(@PathVariable Integer id) {
-        return quizservice.getQuestions(id);   
+        return quizservice.getQuestions(id);
     }
-     
+
     @PostMapping("/submit/{id}")
-    public ResponseEntity<Integer> submitQuiz(@PathVariable Integer id,@RequestBody List<Response> response)  {
-        
-        return quizservice.submitQuiz(id,response);
+    public ResponseEntity<Integer> submitQuiz(@PathVariable Integer id, @RequestBody List<Response> response) {
+
+        return quizservice.submitQuiz(id, response);
     }
-    
-}   
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteQuiz(@PathVariable Integer id) {
+        return quizservice.deleteQuiz(id);
+    }
+
+}

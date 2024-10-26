@@ -26,11 +26,9 @@ public class QuizService {
    @Autowired
    QuestionDao questionDao;
 
-   public ResponseEntity<String> createQuiz(String category, int numQ,String title) {
+   public ResponseEntity<String> createQuiz(String category, int numQ, String title) {
 
-
-      List<Questions> questions= questionDao.findRandomQuestionsByCategory(category,numQ);
-
+      List<Questions> questions = questionDao.findRandomQuestionsByCategory(category, numQ);
 
       Quiz quiz = new Quiz();
       quiz.setTitle(title);
@@ -41,28 +39,51 @@ public class QuizService {
    }
 
    public ResponseEntity<List<QuestionWrapper>> getQuestions(Integer id) {
-      Optional<Quiz> quiz= quizDao.findById(id);
-      List<Questions> questionsFromDb =quiz.get().getQuestions();
+      Optional<Quiz> quiz = quizDao.findById(id);
+      List<Questions> questionsFromDb = quiz.get().getQuestions();
       List<QuestionWrapper> questionForUser = new ArrayList<>();
-      for(Questions  q : questionsFromDb){
-         QuestionWrapper qw = new QuestionWrapper(q.getId(), q.getOption1(), q.getOption2(), q.getOption3(), q.getOption4(), q.getQuestion());
+      for (Questions q : questionsFromDb) {
+         QuestionWrapper qw = new QuestionWrapper(q.getId(), q.getOption1(), q.getOption2(), q.getOption3(),
+               q.getOption4(), q.getQuestion());
          questionForUser.add(qw);
       }
-      return new ResponseEntity<>(questionForUser, HttpStatus.OK) ;
+      return new ResponseEntity<>(questionForUser, HttpStatus.OK);
    }
 
    public ResponseEntity<Integer> submitQuiz(Integer id, List<Response> response) {
-     Quiz quiz = quizDao.findById(id).get();
-     List<Questions> questions = quiz.getQuestions();
+      Quiz quiz = quizDao.findById(id).get();
+      List<Questions> questions = quiz.getQuestions();
 
-     int i=0;
-     int right=0;
-      for(Response  resp : response){
-         if(resp.getAns().equals(questions.get(i).getRightanswer())){
+      int i = 0;
+      int right = 0;
+      for (Response resp : response) {
+         if (resp.getAns().equals(questions.get(i).getRightanswer())) {
             right++;
          }
          i++;
       }
-      return new ResponseEntity<>(right,HttpStatus.OK);
+      return new ResponseEntity<>(right, HttpStatus.OK);
+   }
+
+   public ResponseEntity<List<Quiz>> getAllQuizs() {
+      try {
+
+         return new ResponseEntity<>(quizDao.findAll(), HttpStatus.OK);
+      } catch (Exception e) {
+         e.printStackTrace();
+      }
+      return new ResponseEntity<>(new ArrayList<>(), HttpStatus.BAD_REQUEST);
+   }
+
+   // DELETE
+   public ResponseEntity<String> deleteQuiz(Integer id) {
+      try {
+         quizDao.deleteById(id);
+         return new ResponseEntity<>("successfully deleted", HttpStatus.OK);
+      } catch (Exception e) {
+
+         e.printStackTrace();
+      }
+      return new ResponseEntity<>("failed to delete", HttpStatus.BAD_REQUEST);
    }
 }

@@ -31,6 +31,11 @@ public class QuestionController {
     public ResponseEntity<List<Questions>> getAllQuestions() {
         return questionService.getAllQuestions();
     }
+
+    @GetMapping("/getCategory")
+    public ResponseEntity<List<String>> getCategory() {
+        return questionService.getCategory();
+    }
     
     @GetMapping("/category/{category}")
     public ResponseEntity<List<Questions>> getQuestionByCategory(@PathVariable String category) {

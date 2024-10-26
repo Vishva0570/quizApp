@@ -79,5 +79,19 @@ public ResponseEntity<String> deleteQuestions(Integer id) {
   return new ResponseEntity<>("failed to delete",HttpStatus.BAD_REQUEST);
 }
 
+public ResponseEntity<List<String>> getCategory() {
+   // try{
+   //    List<Questions> qn = questionDao.findAll();
+   //    for(int i=1;i<qn.length();i++){
+   //       q.get(i).getCategory();
+   //    }
+   //    return new ResponseEntity<>(,HttpStatus.OK);
+   //    }
+   //  catch(Exception e){
+   //    e.printStackTrace();
+   // }
+   return new ResponseEntity<>(new ArrayList<>(),HttpStatus.BAD_REQUEST);
+}
+
 
 }
